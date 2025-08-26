@@ -1,4 +1,6 @@
 audioplayer>=0.6
+bs4>=0.0.2
 fastapi[standard]>=0.116.1
 httpx>=0.28.1
 pydantic>=2.11.7
+selenium>=4.35.0
