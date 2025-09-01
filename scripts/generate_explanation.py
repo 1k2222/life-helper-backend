@@ -121,7 +121,9 @@ if __name__ == '__main__':
         if key not in records_by_page:
             records_by_page[key] = []
         records_by_page[key].append(record)
+    progress = 0
     for k, v in records_by_page.items():
+        progress += 1
         file_name, page_id = k
         buf, buf_tokens, buf_para_range = "", 0, [0, 0]
         for i, record in enumerate(v):
@@ -131,7 +133,7 @@ if __name__ == '__main__':
                 buf, buf_tokens = record.content, token_count
                 buf_para_range = [record.paragraph_id, record.paragraph_id]
                 logger.info(
-                    f"Paragraph explanation generated, filename: {record.file_name}, page_id: {record.page_id}, paragraph_id: {record.paragraph_id}, progress: {i + 1}/{len(records)}")
+                    f"Paragraph explanation generated, filename: {record.file_name}, page_id: {record.page_id}, paragraph_id: {record.paragraph_id}, progress: {progress}/{len(records)}")
             else:
                 buf += record.content
                 buf_tokens += token_count
