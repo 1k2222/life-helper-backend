@@ -141,10 +141,12 @@ if __name__ == '__main__':
                 buf, buf_tokens = record.content, token_count
                 buf_para_range = [record.paragraph_id, record.paragraph_id]
                 logger.info(
-                    f"Paragraph explanation generated, filename: {record.file_name}, page_id: {record.page_id}, paragraph_id: {record.paragraph_id}, progress: {progress}/{len(paragraph_records)} ({progress * 100.0 / len(paragraph_records)}%)")
+                    f"Paragraph explanation generated, filename: {record.file_name}, page_id: {record.page_id}, paragraph_id: {buf_para_range[1]}, progress: {progress}/{len(paragraph_records)} ({progress * 100.0 / len(paragraph_records)}%)")
             else:
                 buf += record.content
                 buf_tokens += token_count
                 buf_para_range[1] = record.paragraph_id
         if buf:
             generate(session, llm_model, file_name, page_id, buf, buf_para_range)
+            logger.info(
+                f"Paragraph explanation generated, filename: {file_name}, page_id: {page_id}, paragraph_id: {buf_para_range[1]}, progress: {progress}/{len(paragraph_records)} ({progress * 100.0 / len(paragraph_records)}%)")
