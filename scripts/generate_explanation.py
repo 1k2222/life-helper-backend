@@ -111,12 +111,18 @@ if __name__ == '__main__':
         text("max_token_count <= 512")).order_by(
         Paragraphs.file_name.asc(), Paragraphs.page_id.asc(), Paragraphs.paragraph_id.asc()).all()
     valid_pages = set([(x.file_name, x.page_id) for x in valid_page_records])
-    records = Session().query(Paragraphs).filter(Paragraphs.file_name >= 'The_Economist_2025_06_07.md').order_by(
+    explanation_records = Session().query(Explanation).all()
+    already_explained = set()
+    for record in explanation_records:
+        for para_id in range(record.start_paragraph_id, record.end_paragraph_id + 1):
+            already_explained.add((record.file_name, record.page_id, para_id))
+    paragraph_records = Session().query(Paragraphs).filter(
+        Paragraphs.file_name >= 'The_Economist_2025_06_07.md').order_by(
         Paragraphs.file_name.asc(), Paragraphs.page_id.asc(), Paragraphs.paragraph_id.asc()).all()
 
     records_by_page = {}
     session = Session()
-    for record in records:
+    for record in paragraph_records:
         key = (record.file_name, record.page_id)
         if key not in records_by_page:
             records_by_page[key] = []
@@ -127,13 +133,15 @@ if __name__ == '__main__':
         buf, buf_tokens, buf_para_range = "", 0, [0, 0]
         for i, record in enumerate(v):
             progress += 1
+            if (file_name, page_id, record.paragraph_id) in already_explained:
+                continue
             token_count = len(encoder.encode(record.content))
             if buf_tokens + token_count > chunk_limit:
                 generate(session, llm_model, file_name, page_id, buf, buf_para_range)
                 buf, buf_tokens = record.content, token_count
                 buf_para_range = [record.paragraph_id, record.paragraph_id]
                 logger.info(
-                    f"Paragraph explanation generated, filename: {record.file_name}, page_id: {record.page_id}, paragraph_id: {record.paragraph_id}, progress: {progress}/{len(records)}")
+                    f"Paragraph explanation generated, filename: {record.file_name}, page_id: {record.page_id}, paragraph_id: {record.paragraph_id}, progress: {progress}/{len(paragraph_records)} ({progress * 100.0 / len(paragraph_records)}%)")
             else:
                 buf += record.content
                 buf_tokens += token_count
