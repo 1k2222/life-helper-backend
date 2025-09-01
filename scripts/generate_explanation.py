@@ -97,7 +97,7 @@ def generate(session, llm_model, file_name, page_id, content, buf_para_range):
 
 
 if __name__ == '__main__':
-    chunk_limit, llm_model = 512, 'gpt-4.1-nano'
+    chunk_limit, llm_model = 512, 'gpt-4o-mini'
     encoder = tiktoken.encoding_for_model(llm_model)
     system_prompt_tokens = len(encoder.encode(system_prompt))
     engine = create_engine('sqlite:///assets/the_economist/sqlite_database.db')
@@ -123,10 +123,10 @@ if __name__ == '__main__':
         records_by_page[key].append(record)
     progress = 0
     for k, v in records_by_page.items():
-        progress += 1
         file_name, page_id = k
         buf, buf_tokens, buf_para_range = "", 0, [0, 0]
         for i, record in enumerate(v):
+            progress += 1
             token_count = len(encoder.encode(record.content))
             if buf_tokens + token_count > chunk_limit:
                 generate(session, llm_model, file_name, page_id, buf, buf_para_range)
