@@ -129,7 +129,7 @@ if __name__ == '__main__':
             if buf_tokens + token_count > chunk_limit:
                 generate(session, llm_model, file_name, page_id, buf, buf_para_range)
                 buf, buf_tokens = record.content, token_count
-                buf_para_range = (record.paragraph_id, record.paragraph_id)
+                buf_para_range = [record.paragraph_id, record.paragraph_id]
                 logger.info(
                     f"Paragraph explanation generated, filename: {record.file_name}, page_id: {record.page_id}, paragraph_id: {record.paragraph_id}, progress: {i + 1}/{len(records)}")
             else:
