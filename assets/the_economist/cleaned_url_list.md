@@ -31,7 +31,6 @@ https://magazinelib.com/all/the-economist-usa-january-25-2025/
 https://magazinelib.com/all/the-economist-usa-january-18-2025/
 https://magazinelib.com/all/the-economist-usa-january-11-2025/
 https://magazinelib.com/all/the-economist-usa-january-4-2025/
-
 https://magazinelib.com/all/the-economist-uk-december-22-2024/
 https://magazinelib.com/all/the-economist-continental-europe-edition-20-december-2024/
 https://magazinelib.com/all/the-economist-usa-december-14-2024/
@@ -118,6 +117,7 @@ https://magazinelib.com/all/the-economist-usa-february-11-2023/
 https://magazinelib.com/all/the-economist-usa-january-28-2023/
 https://magazinelib.com/all/the-economist-usa-january-21-2023/
 https://magazinelib.com/all/the-economist-usa-january-14-2023/
+
 https://magazinelib.com/all/the-economist-usa-december-24-2022/
 https://magazinelib.com/all/the-economist-usa-december-17-2022/
 https://magazinelib.com/all/the-economist-usa-december-10-2022/
@@ -135,3 +135,21 @@ https://magazinelib.com/all/the-economist-usa-august-13-2022/
 https://magazinelib.com/all/the-economist-usa-july-30-2022/
 https://magazinelib.com/all/the-economist-usa-july-23-2022/
 https://magazinelib.com/all/the-economist-usa-july-16-2022/
+https://magazinelib.com/all/the-economist-usa-june-25-2022/
+https://magazinelib.com/all/the-economist-usa-june-18-2022/
+https://magazinelib.com/all/the-economist-usa-june-11-2022/
+
+https://magazinelib.com/all/the-economist-usa-may-21-2022/
+https://magazinelib.com/all/the-economist-usa-may-14-2022/
+https://magazinelib.com/all/the-economist-usa-april-30-2022/
+https://magazinelib.com/all/the-economist-usa-april-23-2022/
+https://magazinelib.com/all/the-economist-usa-april-16-2022/
+https://magazinelib.com/all/the-economist-usa-march-26-2022/
+https://magazinelib.com/all/the-economist-usa-march-19-2022/
+https://magazinelib.com/all/the-economist-usa-march-12-2022/
+https://magazinelib.com/all/the-economist-uk-edition-february-26-2022/
+https://magazinelib.com/all/the-economist-usa-february-19-2022/
+https://magazinelib.com/all/the-economist-uk-edition-february-12-2022/
+https://magazinelib.com/all/the-economist-usa-january-29-2022/
+https://magazinelib.com/all/the-economist-usa-january-22-2022/
+https://magazinelib.com/all/the-economist-usa-january-15-2022/
