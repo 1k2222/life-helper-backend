@@ -147,4 +147,4 @@ if __name__ == '__main__':
         if buf:
             generate(session, llm_model, file_name, page_id, buf, buf_para_range)
             logger.info(
-                f"Paragraph explanation generated, filename: {file_name}, page_id: {page_id}, paragraph_id: {buf_para_range[1]}, progress: {progress}/{len(paragraph_records)} ({progress * 100.0 / len(paragraph_records)}%)")
+                f"Paragraph explanation generated, filename: {file_name}, page_id: {page_id}, paragraph_id: {buf_para_range[1]}, progress: {progress}/{len(paragraph_records)} ({progress * 100.0 / len(paragraph_records):.4f}%)")
