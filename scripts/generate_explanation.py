@@ -116,7 +116,7 @@ if __name__ == '__main__':
         for para_id in range(record.start_paragraph_id, record.end_paragraph_id + 1):
             already_explained.add((record.file_name, record.page_id, para_id))
     paragraph_records = Session().query(Paragraphs).order_by(
-        Paragraphs.file_name.asc(), Paragraphs.page_id.asc(), Paragraphs.paragraph_id.asc()).all()
+        Paragraphs.file_name.desc(), Paragraphs.page_id.asc(), Paragraphs.paragraph_id.asc()).all()
 
     records_by_page = {}
     session = Session()
