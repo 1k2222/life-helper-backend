@@ -4,6 +4,7 @@ fastapi[standard]
 httpx
 loguru
 openai
+pandas
 pillow
 pydantic
 selenium

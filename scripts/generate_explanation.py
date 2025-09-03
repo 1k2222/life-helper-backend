@@ -104,20 +104,18 @@ if __name__ == '__main__':
     cost_estimation(engine)
     BaseModel.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
-    valid_page_records = Session().query(Paragraphs.file_name, Paragraphs.page_id,
-                                         func.max(Paragraphs.token_count).label('max_token_count')).filter(
-        Paragraphs.file_name >= 'The_Economist_2025_06_07.md').group_by(Paragraphs.file_name,
-                                                                        Paragraphs.page_id).having(
+    valid_page_records = (Session().query(Paragraphs.file_name, Paragraphs.page_id,
+                                          func.max(Paragraphs.token_count).label('max_token_count')).group_by(
+        Paragraphs.file_name, Paragraphs.page_id).having(
         text("max_token_count <= 512")).order_by(
-        Paragraphs.file_name.asc(), Paragraphs.page_id.asc(), Paragraphs.paragraph_id.asc()).all()
+        Paragraphs.file_name.asc(), Paragraphs.page_id.asc(), Paragraphs.paragraph_id.asc()).all())
     valid_pages = set([(x.file_name, x.page_id) for x in valid_page_records])
     explanation_records = Session().query(Explanation).all()
     already_explained = set()
     for record in explanation_records:
         for para_id in range(record.start_paragraph_id, record.end_paragraph_id + 1):
             already_explained.add((record.file_name, record.page_id, para_id))
-    paragraph_records = Session().query(Paragraphs).filter(
-        Paragraphs.file_name >= 'The_Economist_2025_06_07.md').order_by(
+    paragraph_records = Session().query(Paragraphs).order_by(
         Paragraphs.file_name.asc(), Paragraphs.page_id.asc(), Paragraphs.paragraph_id.asc()).all()
 
     records_by_page = {}

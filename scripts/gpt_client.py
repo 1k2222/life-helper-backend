@@ -7,7 +7,7 @@ def init_client():
     global client
     if client is None:
         client = OpenAI(base_url='https://40.chatgptsb.net/v1',
-                        api_key='sk-BAAcqM5uwpwL6QpbkxfEJ4yfJQXx05sbBMJIxKH8WdhZ9jUM', timeout=600.0)
+                        api_key='sk-XL9BthU1W4zNLqifGn4xR2t2ERggCreSK9U3KhGfwOWk2RoP', timeout=600.0)
 
 
 def chat_completion(user_prompt, system_prompt='', model='gpt-4.1'):
