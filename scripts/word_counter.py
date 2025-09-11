@@ -60,7 +60,7 @@ def count_real_words(session_cls, nlp, easy_words):
             with open(real_word_cache_file_path, 'w') as f:
                 f.write(json.dumps({"last_para_id": last_para_id, "all_word_count": all_word_count}))
             logger.info(
-                f"real word count progress: {i + 1}/{len(paragraph_records)} ({(i + 1) * 100.0 / len(paragraph_records):.4f}%)")
+                f"real word count {len(all_word_count)}, progress: {i + 1}/{len(paragraph_records)} ({(i + 1) * 100.0 / len(paragraph_records):.4f}%)")
 
 
 def count_word_from_explanation(nlp):
