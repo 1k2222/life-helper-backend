@@ -10,6 +10,9 @@ from scripts.models import BaseModel, Explanation, Paragraphs
 import pandas as pd
 from loguru import logger
 
+real_word_cache_file_path = './assets/the_economist/real_word.json'
+word_lemma_cache_file_path = './assets/the_economist/word_lemma.json'
+
 
 def get_easy_word_set():
     easy_words = []
@@ -35,10 +38,9 @@ def count_real_words(session_cls, nlp, easy_words):
     # for record in real_word_count_records:
     #     paragraphs_already_counted_real_words.add(record.paragraph_id)
 
-    cache_file_path = './assets/the_economist/real_word.json'
     last_para_id, all_word_count = 0, {}
     try:
-        with open(cache_file_path, 'r') as f:
+        with open(real_word_cache_file_path, 'r') as f:
             obj = json.loads(f.read())
             last_para_id, all_word_count = obj['last_para_id'], obj['all_word_count']
     except Exception:
@@ -58,15 +60,18 @@ def count_real_words(session_cls, nlp, easy_words):
             all_word_count[word] = all_word_count.get(word, 0) + 1
         last_para_id = record.id
         if (i + 1) % 1000 == 0:
-            with open(cache_file_path, 'w') as f:
+            with open(real_word_cache_file_path, 'w') as f:
                 f.write(json.dumps({"last_para_id": last_para_id, "all_word_count": all_word_count}))
             logger.info(
                 f"real word count progress: {i + 1}/{len(paragraph_records)} ({(i + 1) * 100.0 / len(paragraph_records):.4f}%)")
 
 
-def count_word_from_explanation():
+def count_word_from_explanation(nlp):
+    real_word_count = {}
+    with open(real_word_cache_file_path, 'r') as f:
+        obj = json.loads(f.read())
+        real_word_count = obj["all_word_count"]
     explanation_records = Session().query(Explanation).order_by(Explanation.id.asc()).all()
-    bad_records = 0
     re_letter = re.compile(r'[a-zA-Z]')
     re_non_word_characters = re.compile(r'[-*.0-9]')
     word_count = {}
@@ -90,25 +95,41 @@ def count_word_from_explanation():
                 break
             parts[0] = re_non_word_characters.sub('', parts[0])
             word_count[parts[0]] = word_count.get(parts[0], 0) + 1
-    words_str = ' '.join(word_count.keys())
-    nlp_result = nlp(words_str)
-    lemma_map, lemma_word_count = {}, {}
-    for token in nlp_result:
-        lemma_map[token.text] = token.lemma_
-    for k, v in word_count.items():
-        word = lemma_map.get(k, k)
-        if word in easy_words:
-            continue
-        lemma_word_count[word] = lemma_word_count.get(word, 0) + v
+    lemma_map, lemma_word_count, real_word_count_column = {}, {}, []
+    lemma_map = {}
+    try:
+        with open(word_lemma_cache_file_path, 'r') as f:
+            lemma_map = json.loads(f.read())
+    except Exception:
+        pass
+    for i, (k, v) in enumerate(word_count.items()):
+        if (i + 1) % 1000 == 0:
+            with open(word_lemma_cache_file_path, 'w') as f:
+                f.write(json.dumps(lemma_map))
+            logger.info(f"Word Count: {i + 1}/{len(word_count)} finished")
+        words = k.split()
+        for word in words:
+            if word not in lemma_map:
+                nlp_result = nlp(word)
+                lemma_map[word] = nlp_result[0].lemma_
+            word = lemma_map[word]
+            if word in easy_words:
+                continue
+            lemma_word_count[word] = lemma_word_count.get(word, 0) + v
+    for word in lemma_word_count.keys():
+        real_word_count_column.append(real_word_count.get(word, None))
 
-    df = pd.DataFrame({"word": lemma_word_count.keys(), "count": lemma_word_count.values()})
+    df = pd.DataFrame(
+        {"word": lemma_word_count.keys(), "count": lemma_word_count.values(), "real_count": real_word_count_column})
     df.to_csv('./assets/the_economist/word_count_2023_07.csv', index=False)
 
 
 if __name__ == '__main__':
     engine = create_engine('sqlite:///assets/the_economist/sqlite_database.db')
     nlp = spacy.load("en_core_web_trf")
+    nlp.max_length = 10000000
     easy_words = get_easy_word_set()
     BaseModel.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
-    count_real_words(Session, nlp, easy_words)
+    # count_real_words(Session, nlp, easy_words)
+    count_word_from_explanation(nlp)
