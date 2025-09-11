@@ -49,10 +49,7 @@ def count_real_words(session_cls, nlp, easy_words):
     for i, record in enumerate(paragraph_records):
         if record.id < last_para_id:
             continue
-        content = re_word.finditer(record.content)
-        content = [x.group() for x in content if x not in easy_words]
-        content = ' '.join(content)
-        nlp_result = nlp(content)
+        nlp_result = nlp(record.content)
         for token in nlp_result:
             word = token.lemma_.lower()
             if not re_word.match(word) or word in easy_words:
@@ -131,5 +128,5 @@ if __name__ == '__main__':
     easy_words = get_easy_word_set()
     BaseModel.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
-    # count_real_words(Session, nlp, easy_words)
+    count_real_words(Session, nlp, easy_words)
     count_word_from_explanation(nlp)
