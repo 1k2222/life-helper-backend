@@ -13,6 +13,7 @@ from defines.pathes import CONFIG_PATH
 from entities.base import new_success_response
 
 _player_process: Optional[Process] = None
+_play_newest = False
 
 
 class AudioPlayerConfig(BaseModel):
@@ -43,19 +44,40 @@ def _start_play():
         print(f"{file} ended.")
 
 
+def _start_play_newest():
+    config_path = os.path.join(CONFIG_PATH, "audio_player_config.json")
+    config = AudioPlayerConfig.model_validate_json(open(config_path, 'r').read())
+    play_list = load_playlist(config.study_progress)
+    file = play_list[0]
+    while True:
+        player = AudioPlayer(file)
+        player.play(block=True)
+
+
 def start_play():
-    global _player_process
+    global _player_process, _play_newest
     if _player_process:
         return
+    _play_newest = False
     _player_process = multiprocessing.Process(target=_start_play)
     _player_process.start()
 
 
+def start_play_newest():
+    global _player_process, _play_newest
+    if _player_process:
+        return
+    _play_newest = True
+    _player_process = multiprocessing.Process(target=_start_play_newest)
+    _player_process.start()
+
+
 def stop_play():
-    global _player_process
+    global _player_process, _play_newest
     if not _player_process:
         return
     _player_process.terminate()
+    _play_newest = False
     _player_process = None
 
 
@@ -69,10 +91,9 @@ def get_status():
         "audio_count": len(glob.glob('./assets/all_audios/*.mp3')),
         "study_progress": config.study_progress,
         "cursor": config.cursor,
-        "current_file": os.path.basename(play_list[config.cursor])
+        "current_file": os.path.basename(play_list[0 if _play_newest else config.cursor])
     })
 
-
-def set_progress(new_progress: AudioPlayerConfig):
-    config_path = os.path.join(CONFIG_PATH, "audio_player_config.json")
-    open(config_path, 'w').write(new_progress.model_dump_json())
+    def set_progress(new_progress: AudioPlayerConfig):
+        config_path = os.path.join(CONFIG_PATH, "audio_player_config.json")
+        open(config_path, 'w').write(new_progress.model_dump_json())
