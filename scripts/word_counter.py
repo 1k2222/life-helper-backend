@@ -114,7 +114,7 @@ def count_word_from_explanation(nlp):
                 continue
             lemma_word_count[word] = lemma_word_count.get(word, 0) + v
     for word in lemma_word_count.keys():
-        real_word_count_column.append(real_word_count.get(word, None))
+        real_word_count_column.append(real_word_count.get(word, 0))
 
     df = pd.DataFrame(
         {"word": lemma_word_count.keys(), "count": lemma_word_count.values(), "real_count": real_word_count_column})
@@ -128,5 +128,5 @@ if __name__ == '__main__':
     easy_words = get_easy_word_set()
     BaseModel.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
-    count_real_words(Session, nlp, easy_words)
+    # count_real_words(Session, nlp, easy_words)
     count_word_from_explanation(nlp)

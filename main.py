@@ -47,7 +47,7 @@ async def set_progress_handler(req: AudioPlayerConfig):
 async def set_progress_handler(req: PronounceCantoneseRequest):
     url = f'{os.getenv("GPT_SOVITS_PATH")}/tts'
     req_body = {
-        "text": req.text,
+        "text": '.'.join([x for x in req.text]),
         "text_lang": "all_yue",
         "ref_audio_path": os.path.realpath('./assets/cantonese_reference.mp3'),
         "aux_ref_audio_paths": [],
@@ -56,7 +56,7 @@ async def set_progress_handler(req: PronounceCantoneseRequest):
         "top_k": 5,
         "top_p": 1,
         "temperature": 1,
-        "text_split_method": "cut0",
+        "text_split_method": "cut5",
         "batch_size": 1,
         "batch_threshold": 0.75,
         "split_bucket": True,
