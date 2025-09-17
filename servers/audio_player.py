@@ -94,6 +94,6 @@ def get_status():
         "current_file": os.path.basename(play_list[0 if _play_newest else config.cursor])
     })
 
-    def set_progress(new_progress: AudioPlayerConfig):
-        config_path = os.path.join(CONFIG_PATH, "audio_player_config.json")
-        open(config_path, 'w').write(new_progress.model_dump_json())
+def set_progress(new_progress: AudioPlayerConfig):
+    config_path = os.path.join(CONFIG_PATH, "audio_player_config.json")
+    open(config_path, 'w').write(new_progress.model_dump_json())

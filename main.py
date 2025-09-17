@@ -10,7 +10,7 @@ from dtos import PronounceCantoneseRequest
 from entities.base import new_success_response
 from handlers.english_player_handler import start_english_player_handler, stop_english_player_handler, \
     start_english_player_newest_handler
-from servers.audio_player import get_status, AudioPlayerConfig
+from servers.audio_player import get_status, AudioPlayerConfig, set_progress
 
 from fastapi.responses import FileResponse
 
