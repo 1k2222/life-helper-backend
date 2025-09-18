@@ -27,3 +27,12 @@ class Explanation(BaseModel):
     llm_model = Column(String)
     input_token_count = Column(Integer)
     output_token_count = Column(Integer)
+
+
+class Dictionary(BaseModel):
+    __tablename__ = "dictionary"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    word = Column(String)
+    llm_explanation = Column(String)
+    llm_mentioned_times = Column(Integer)
+    times_in_ocr = Column(Integer)
